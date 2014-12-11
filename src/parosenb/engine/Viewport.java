@@ -12,8 +12,12 @@ public abstract class Viewport {
 	public Vec2i viewSize = new Vec2i(0,0);
 	public Vec2i topLeft = new Vec2i(0,0);
 	
-	public void translate(Vec2i translation){
+	public void translate(Vec2i translation) {
 		transform.translate(translation.x, translation.y);
+	}
+	
+	public void addTranslation(Vec2i translation){
+		amountToTranslate = amountToTranslate.plus(translation);
 	}
 	
 	public void zoom(float amount, Vec2i viewCenter) {

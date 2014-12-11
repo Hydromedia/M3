@@ -29,7 +29,6 @@ public class GameWorld extends World {
 	private boolean goingLeft = false;
 	private boolean goingRight = false;
 	private Ray ray = null;
-	
 	public GameWorld(Vec2f worldBounds, GameScreen screen) {
 		this.screen = screen;
 		this.worldBounds = worldBounds;
@@ -79,6 +78,10 @@ public class GameWorld extends World {
 	@Override
 	public void onTick(long nanosSincePreviousTick) {
 		super.onTick(nanosSincePreviousTick);
+		Vec2f view = (new Vec2f(-this.playerUnit.position.x,  -this.playerUnit.position.y));
+		view = view.plus(new Vec2f(viewport.viewSize.x, viewport.viewSize.y).sdiv(2f));
+		viewport.amountToTranslate = new Vec2i((int)view.x, (int)view.y);
+		//viewport.addTranslation(new Vec2i((int) this.playerUnit.position.x, (int)this.playerUnit.position.y));
 		for (PhysicsEntity e : physicsEntities){
 			Vec2f g = new Vec2f(0, .0098f);
 			e.applyForce(g.smult(e.getMass()));

@@ -9,7 +9,7 @@ import parosenb.engine.*;
 
 public class GameViewport extends Viewport {
 	private GameWorld world;
-	
+	private PlayerUnit _player;
 	public GameViewport(GameWorld world){
 		this.setWorld(world);
 		amountToTranslate = new Vec2i(0, 0);
@@ -17,7 +17,9 @@ public class GameViewport extends Viewport {
 		transform = new AffineTransform();
 	}
 	
+	
 	public void onDraw(Graphics2D g, Vec2i topLeft, Vec2i screenVector, Vec2i viewSize){
+		System.out.println(this.transform.getTranslateY());
 		this.topLeft = topLeft;
 		transform = new AffineTransform();
 		//g.clipRect(topLeft.x, topLeft.y, viewSize.x, viewSize.y);

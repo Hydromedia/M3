@@ -12,7 +12,7 @@ public class MMain {
 		initializeSpriteFiles();
 		
 		Vec2i windowSize =  new Vec2i(700, 500);
-		Application app = new Application("Perry's M1", false, windowSize);
+		Application app = new Application("Perry's M3", false, windowSize);
 		app.addScreen(new MenuScreen(app, windowSize));
 		app.startup(); // begin processing events
 	}

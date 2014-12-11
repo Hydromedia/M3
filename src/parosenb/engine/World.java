@@ -21,6 +21,8 @@ public abstract class World {
 	public ArrayList<PhysicsEntity> physicsToRemove = new ArrayList<PhysicsEntity>();
 	public ArrayList<Ray> raysToRemove = new ArrayList<Ray>();
 	public ArrayList<Ray> rays = new ArrayList<Ray>();
+	protected Viewport viewport;
+	
 	
 	public ArrayList<PhysicsEntity> getPhysicsEntities() {
 		return physicsEntities;
@@ -136,6 +138,10 @@ public abstract class World {
 		}
 	}
 	
+	
+	public void setView(Viewport view){
+		this.viewport = view;
+	}
 	public void onTick(long nanosSincePreviousTick){
 		for(Entity e: entities) {
 			e.onTick(nanosSincePreviousTick);
@@ -158,7 +164,6 @@ public abstract class World {
 		for (Ray r: raysToRemove) {
 			rays.remove(r);
 		}
-		System.out.println(rays.size());
 		raysToRemove = new ArrayList<Ray>();
 	}
 	

@@ -24,6 +24,7 @@ public class GameScreen extends Screen {
 		this.screenVector = screenVector;
 		this.gameWorld = new GameWorld(new Vec2f(WIDTH, HEIGHT), this);
 		this.gameView = new GameViewport(gameWorld);
+		gameWorld.setView(gameView);
 		this.gameView.viewSize = new Vec2i(WIDTH, HEIGHT);
 	}
 
