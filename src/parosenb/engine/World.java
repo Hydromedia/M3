@@ -4,11 +4,18 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import parosenb.engine.collision.Ray;
 import parosenb.m.game.GameViewport;
 import parosenb.m.game.Grenade;
+import cs1971.CS1971LevelReader;
+import cs1971.CS1971LevelReader.InvalidLevelException;
+import cs1971.LevelData;
+import cs1971.LevelData.EntityData;
 import cs1971.Vec2f;
 import cs1971.Vec2i;
 
@@ -22,6 +29,7 @@ public abstract class World {
 	public ArrayList<Ray> raysToRemove = new ArrayList<Ray>();
 	public ArrayList<Ray> rays = new ArrayList<Ray>();
 	protected Viewport viewport;
+	protected Map<String, Entity> entitiesInLevel;
 	
 	
 	public ArrayList<PhysicsEntity> getPhysicsEntities() {
@@ -138,10 +146,27 @@ public abstract class World {
 		}
 	}
 	
+	public void initializeWorld(String path){
+		//"levels/level1.nlf"
+		File file = new File(path);
+		LevelData leveld = null;
+		try {
+			leveld = CS1971LevelReader.readLevel(file);
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found.");
+		} catch (InvalidLevelException e) {
+			System.out.println("Invalid level.");
+		}
+		
+		for(EntityData f : leveld.getEntities()){
+			f.getEntityClass().
+		}
+	}
 	
 	public void setView(Viewport view){
 		this.viewport = view;
 	}
+	
 	public void onTick(long nanosSincePreviousTick){
 		for(Entity e: entities) {
 			e.onTick(nanosSincePreviousTick);
