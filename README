@@ -1,0 +1,5 @@
+Ray collisions are done in the top level world, and are handled by the Ray class in engine.collision. All of the restitution math takes place in the collide() method in the world. Sorry I'm not being more thorough, I've run out of time.
+
+Known Bugs: The player dissapears when it is hit by a grenade's blast. 
+
+Approximate hours: 16

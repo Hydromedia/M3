@@ -1,0 +1,10 @@
+Hold a to run left. Hold d to run right. Press w to jump. Have fun!
+
+
+In the debugger, click on a shape to select, 
+then use wasd to make the shape go in the respective directions (up, left, down, right). The shapes will keep moving when you unselect.
+
+Press the left mouse button to shoot a laser to the right.
+Press the middle and right mouse buttons respectively to lob a grenade up left and up right.
+
+Hit escape to return to the menu at any time.
