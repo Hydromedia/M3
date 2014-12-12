@@ -20,7 +20,7 @@ public class Wall extends GameEntity {
 		super(p, w, name, s, properties);
 		this.isMoveable = false;
 		this.position = position;
-		this.restitution = restitution;
+		this.restitution = 0;
 	}
 
 	@Override

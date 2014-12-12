@@ -42,6 +42,7 @@ public class PlayerUnit extends GameEntity {
 	public void onTick(long nanosSincePreviousTick) {
 		super.onTick(nanosSincePreviousTick);
 		float millisecondsSincePreviousTick = nanosSincePreviousTick / 1000000;
+		//this.setLastMTV(lastMTV);
 		//System.out.println("PlayerUnit vel: " + this.velocity + " pos: " + this.position);
 	}
 }

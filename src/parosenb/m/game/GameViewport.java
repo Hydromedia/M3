@@ -10,6 +10,7 @@ import parosenb.engine.*;
 public class GameViewport extends Viewport {
 	private GameWorld world;
 	private PlayerUnit _player;
+	public Vec2i test = new Vec2i(0,0);
 	public GameViewport(GameWorld world){
 		this.setWorld(world);
 		amountToTranslate = new Vec2i(0, 0);
@@ -23,15 +24,15 @@ public class GameViewport extends Viewport {
 		transform = new AffineTransform();
 		//g.clipRect(topLeft.x, topLeft.y, viewSize.x, viewSize.y);
 		//zoom(amountToZoom, new Vec2i((viewSize.x)/2, (viewSize.y)/2));
-		zoom(amountToZoom, new Vec2i(0, 0));
+		zoom(amountToZoom, test);
 		//boundTranslation(amountToTranslate, amountToZoom, screenVector);
-		//translate(topLeft);
+		translate(topLeft);
 		translate(amountToTranslate);
 		g.setTransform(transform);
 		world.onDraw(topLeft, g);
 		//getWorld().onDraw(g, screenVector, viewSize);
 		
-		//draw static sized imagesin world
+		//draw static sized images in world
 		transform = new AffineTransform();
 		//g.clipRect(0, 0, viewSize.x, viewSize.y);
 		//g.fillRect(0, 0, screenVector.x, (4*screenVector.y)/5);

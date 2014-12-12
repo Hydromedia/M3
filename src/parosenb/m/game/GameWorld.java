@@ -79,9 +79,13 @@ public class GameWorld extends World {
 		Vec2f view = (new Vec2f(
 				-this.playerUnit.position.x,
 				-this.playerUnit.position.y));
-		view = view.plus(new Vec2f(viewport.viewSize.x, viewport.viewSize.y).sdiv(2f));
+		Point p = Viewport.screenToView(viewport.viewSize, viewport.amountToTranslate, viewport.amountToZoom, 
+				new Point((int)this.playerUnit.position.x, (int)this.playerUnit.position.y), new Vec2i(0,0));
+		//view = new Vec2f(p.x, p.y).plus(new Vec2f(viewport.viewSize.x, viewport.viewSize.y).sdiv(-2f));
+		view.plus(new Vec2f(viewport.viewSize.x, viewport.viewSize.y).sdiv(2f));
 		viewport.amountToTranslate = new Vec2i((int)view.x, (int)view.y);
-		viewport.topLeft = new Vec2i ((int)view.sdiv(2).x,(int) view.sdiv(2).y);
+		//viewport.test = new Vec2i((int)view.x, (int)view.y);
+		//viewport.topLeft = new Vec2i ((int)view.sdiv(2).x,(int) view.sdiv(2).y);
 		//viewport.addTranslation(new Vec2i((int) this.playerUnit.position.x, (int)this.playerUnit.position.y));
 		for (PhysicsEntity e : physicsEntities){
 			Vec2f g = new Vec2f(0, .0098f);
@@ -103,10 +107,11 @@ public class GameWorld extends World {
 	public void onKeyPressed(KeyEvent e, Viewport gameView) {
 		if (playerUnit != null) {
 			if (e.getKeyChar() == 'w') {
-				if(playerUnit.getLastMTV() != null && playerUnit.getLastMTV().y <= 0){
+				System.out.println(playerUnit.getLastMTV());
+				//if(playerUnit.getLastMTV() != null && playerUnit.getLastMTV().y <= 0){
 					System.out.println("test");
 					playerUnit.applyImpulse(new Vec2f(0, -1.4f));
-				}
+				//}
 			} else if (e.getKeyChar() == 'a'){
 				goingLeft = true;
 			} else if (e.getKeyChar() == 's'){

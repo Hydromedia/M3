@@ -48,6 +48,7 @@ public class GameScreen extends Screen {
 	@Override
 	public void screenDraw(Graphics2D g) {
 		gameView.amountToZoom = Math.min(this.screenVector.x/((float) WIDTH), this.screenVector.y/((float) HEIGHT));
+		//gameView.amountToZoom = .4f;
 		gameView.onDraw(g, new Vec2i(0,0), screenVector, new Vec2i(WIDTH, HEIGHT));
 		this.gameView.viewSize = new Vec2i((int) (screenVector.x * gameView.amountToZoom),(int) (screenVector.y * gameView.amountToZoom));
 		//Vec2i(Math.max(0, (screenVector.x - WIDTH)/2), Math.max(0, (screenVector.y - HEIGHT)/2))
