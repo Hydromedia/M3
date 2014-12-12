@@ -73,17 +73,26 @@ public class GameWorld extends World {
 		this.screen.getApp().addScreen(new WinScreen(this.screen.getApp(), screen.screenVector, "The Enemy"));
 	}
 	
+	
+	//	--> screen Rectangle size (w, h)
+	//	--> game rectangle size = (w,h)/scale --> (gw,gh)
+	//	--> if (x,y are points to be the middle, top left is now (x-gw/2, y-gh/2))
 	@Override
 	public void onTick(long nanosSincePreviousTick) {
 		super.onTick(nanosSincePreviousTick);
-		Vec2f view = (new Vec2f(
-				-this.playerUnit.position.x,
-				-this.playerUnit.position.y));
-		Point p = Viewport.screenToView(viewport.viewSize, viewport.amountToTranslate, viewport.amountToZoom, 
-				new Point((int)this.playerUnit.position.x, (int)this.playerUnit.position.y), new Vec2i(0,0));
+		Vec2f gameSize = new Vec2f(((float)viewport.sViewSize.x)/viewport.scale, ((float)viewport.sViewSize.y)/viewport.scale);
+		viewport.gtl = new Vec2f((-this.playerUnit.position.x)+(((float) gameSize.x))/2f, -this.playerUnit.position.y+(((float) gameSize.y))/2f);
+		
+		//Vec2f view = (new Vec2f(
+		//		-this.playerUnit.position.x,
+		//		-this.playerUnit.position.y));
+		
+		//Point p = Viewport.screenToView(viewport.viewSize, viewport.amountToTranslate, viewport.amountToZoom, 
+		//		new Point((int)this.playerUnit.position.x, (int)this.playerUnit.position.y), new Vec2i(0,0));
+		
 		//view = new Vec2f(p.x, p.y).plus(new Vec2f(viewport.viewSize.x, viewport.viewSize.y).sdiv(-2f));
-		view.plus(new Vec2f(viewport.viewSize.x, viewport.viewSize.y).sdiv(2f));
-		viewport.amountToTranslate = new Vec2i((int)view.x, (int)view.y);
+		//view = view.plus(new Vec2f(viewport.viewSize.x, viewport.viewSize.y).sdiv(2f));
+		//viewport.amountToTranslate = new Vec2i((int)view.x, (int)view.y);
 		//viewport.test = new Vec2i((int)view.x, (int)view.y);
 		//viewport.topLeft = new Vec2i ((int)view.sdiv(2).x,(int) view.sdiv(2).y);
 		//viewport.addTranslation(new Vec2i((int) this.playerUnit.position.x, (int)this.playerUnit.position.y));
@@ -108,10 +117,10 @@ public class GameWorld extends World {
 		if (playerUnit != null) {
 			if (e.getKeyChar() == 'w') {
 				System.out.println(playerUnit.getLastMTV());
-				//if(playerUnit.getLastMTV() != null && playerUnit.getLastMTV().y <= 0){
+				if(playerUnit.getLastMTV() != null && playerUnit.getLastMTV().y <= 0){
 					System.out.println("test");
 					playerUnit.applyImpulse(new Vec2f(0, -1.4f));
-				//}
+				}
 			} else if (e.getKeyChar() == 'a'){
 				goingLeft = true;
 			} else if (e.getKeyChar() == 's'){

@@ -80,8 +80,24 @@ public abstract class World {
 						(s.collisionShape.collisionGroupMask & e.collisionShape.collisionGroupMask) == 0) {
 					Vec2f mtv = s.collisionShape.collides(e.collisionShape);
 					Vec2f mtv2 = e.collisionShape.collides(s.collisionShape);
-					s.setLastMTV(mtv2);
-					e.setLastMTV(mtv);
+//					if (mtv2 == null) {
+//						System.out.println("2null");
+//					} if (mtv == null) {
+//						System.out.println("1null");
+//					}
+					
+					if (s.getLastMTV() == null){
+						s.setLastMTV((mtv2));
+					} else if (mtv2 != null) {
+						s.setLastMTV(s.getLastMTV().plus(mtv2));
+					} if (e.getLastMTV() == null){
+						e.setLastMTV((mtv));
+					} else if (mtv != null){
+						e.setLastMTV(e.getLastMTV().plus(mtv));
+					}
+					
+					
+					
 					if (mtv != null) {
 						if (s.isMoveable && e.isMoveable) {
 							s.position = s.position.plus(mtv2.sdiv(2));
@@ -270,6 +286,9 @@ public abstract class World {
 	}
 	
 	public void onTick(long nanosSincePreviousTick){
+		for (PhysicsEntity e: this.physicsEntities) {
+			e.setLastMTV(null);
+		}
 		for(Entity e: entities) {
 			e.onTick(nanosSincePreviousTick);
 		}
