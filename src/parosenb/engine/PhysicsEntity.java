@@ -1,10 +1,18 @@
 package parosenb.engine;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.HashMap;
 
+import parosenb.engine.collision.Shape;
 import cs1971.Vec2f;
 
 
 public abstract class PhysicsEntity extends Entity {
+	public PhysicsEntity(String name, ArrayList<Shape> s,
+			HashMap<String, String> properties) {
+		super(name, s, properties);
+	}
+
 	public Vec2f velocity = new Vec2f(0, 0);
 	protected boolean isMoveable = true;
 	protected float mass = 1;

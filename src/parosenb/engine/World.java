@@ -1,21 +1,26 @@
 package parosenb.engine;
 
 import java.awt.Graphics2D;
+import java.awt.List;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
+import parosenb.engine.collision.Polygon;
 import parosenb.engine.collision.Ray;
+import parosenb.engine.collision.Shape;
 import parosenb.m.game.GameViewport;
-import parosenb.m.game.Grenade;
 import cs1971.CS1971LevelReader;
 import cs1971.CS1971LevelReader.InvalidLevelException;
 import cs1971.LevelData;
+import cs1971.LevelData.ConnectionData;
 import cs1971.LevelData.EntityData;
+import cs1971.LevelData.ShapeData;
 import cs1971.Vec2f;
 import cs1971.Vec2i;
 
@@ -29,7 +34,8 @@ public abstract class World {
 	public ArrayList<Ray> raysToRemove = new ArrayList<Ray>();
 	public ArrayList<Ray> rays = new ArrayList<Ray>();
 	protected Viewport viewport;
-	protected Map<String, Entity> entitiesInLevel;
+	protected HashMap<String, Entity> entitiesInLevel = new HashMap<String, Entity>();
+	private HashMap<String, Class<?>> availableEntities;
 	
 	
 	public ArrayList<PhysicsEntity> getPhysicsEntities() {
@@ -158,9 +164,37 @@ public abstract class World {
 			System.out.println("Invalid level.");
 		}
 		
-		for(EntityData f : leveld.getEntities()){
-			f.getEntityClass().
+		//make Connections
+		for(ConnectionData d : leveld.getConnections()){
+			d.getSource();
 		}
+		
+		//make Entities
+		for(EntityData data : leveld.getEntities()) {
+			
+			//Set up shapes
+			ArrayList<Shape> shapes = new ArrayList<Shape>();
+			for (ShapeData s : data.getShapes()) {
+				if (s.getType() == ShapeData.Type.POLY){
+					java.util.List<Vec2f> list = s.getVerts();
+					for (Vec2f v : list){
+						
+					}
+					Polygon p = new Polygon(new Vec2f(0,0), s.get, null);
+					shapes.add()
+				} else if (s.getType() == ShapeData.Type.CIRCLE) {
+					
+				} else if (s.getType() == ShapeData.Type.BOX) {
+					
+				}
+				
+				s.getType().getClass().getConstructor(parameterTypes).newInstance();
+			}
+			
+			
+			//availableEntities.get(d.getEntityClass()).getConstructor(String, Shape, HashMap<String, String>).newInstance(d.getName(), s, d.getProperties());
+		}
+		
 	}
 	
 	public void setView(Viewport view){

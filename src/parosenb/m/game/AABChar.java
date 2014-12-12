@@ -4,6 +4,8 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import cs1971.Vec2f;
 import cs1971.Vec2i;
@@ -15,13 +17,15 @@ import parosenb.engine.collision.Shape;
 public class AABChar extends GameEntity {
 	public Color color;
 	
-	public AABChar(Vec2f size, Vec2f position, GameWorld world){
-		this.collisionShape = new AAB(new Vec2f(0, 0), position, size);
+	//Vec2f size, Vec2f position, GameWorld world
+	public AABChar(String name, ArrayList<Shape> s, HashMap<String, String> properties){
+		super(name, s, properties);
+		//this.collisionShape = new AAB(new Vec2f(0, 0), position, size);
 		this.position = position;
 		this.color = Color.PINK;
 		super.world = world;
 		world.addEntity(this);
-		world.gameEntities.add(this);
+		//world.gameEntities.add(this);
 		world.addPhysicsEntity(this);
 		this.restitution = .5f;
 	}

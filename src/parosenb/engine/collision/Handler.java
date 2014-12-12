@@ -2,7 +2,6 @@ package parosenb.engine.collision;
 
 import cs1971.Vec2f;
 import parosenb.engine.PhysicsEntity;
-import parosenb.m.game.TestShape;
 
 //handles collisions
 public class Handler {

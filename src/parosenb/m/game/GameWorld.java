@@ -34,20 +34,20 @@ public class GameWorld extends World {
 		this.worldBounds = worldBounds;
 		this.entities = new ArrayList<Entity>();
 		this.physicsEntities = new ArrayList<PhysicsEntity>();
-		this.playerUnit = new PlayerUnit(new Vec2f(worldBounds.x/2, worldBounds.y/3), worldBounds, this);
-		CircleChar e1 = new CircleChar(30, new Vec2f(worldBounds.x/4, worldBounds.y/2), Color.BLACK, this);
-		e1.setMass(4f);
-		CircleChar e2 = new CircleChar(20, new Vec2f(3*worldBounds.x/4, worldBounds.y/2), Color.BLACK, this);
-		e2.setMass(1f);
-		
-		AABChar e3 = new AABChar(new Vec2f(20, 40), new Vec2f(6*worldBounds.x/7, worldBounds.y/2), this);
-		
-		DiamondChar e4 = new DiamondChar(new Vec2f(1*worldBounds.x/7, worldBounds.y/2), 20, Color.orange, this);
-		new Wall(new Vec2f(300, 300),  new Vec2f(100, 50), this, 1);
-		new Wall(new Vec2f(-500, -500),  new Vec2f(500, worldBounds.y + 1000), this, 0);
-		new Wall(new Vec2f(-500, -500),  new Vec2f(worldBounds.x + 1000, 500), this, 0);
-		new Wall(new Vec2f(worldBounds.x, -500),  new Vec2f(500, worldBounds.y + 1000), this, 0);
-		new Wall(new Vec2f(-500, worldBounds.y),  new Vec2f(worldBounds.x + 1000, 500), this, 0);
+//		this.playerUnit = new PlayerUnit(new Vec2f(worldBounds.x/2, worldBounds.y/3), worldBounds, this);
+//		CircleChar e1 = new CircleChar(30, new Vec2f(worldBounds.x/4, worldBounds.y/2), Color.BLACK, this);
+//		e1.setMass(4f);
+//		CircleChar e2 = new CircleChar(20, new Vec2f(3*worldBounds.x/4, worldBounds.y/2), Color.BLACK, this);
+//		e2.setMass(1f);
+//		
+//		AABChar e3 = new AABChar(new Vec2f(20, 40), new Vec2f(6*worldBounds.x/7, worldBounds.y/2), this);
+//		
+//		DiamondChar e4 = new DiamondChar(new Vec2f(1*worldBounds.x/7, worldBounds.y/2), 20, Color.orange, this);
+//		new Wall(new Vec2f(300, 300),  new Vec2f(100, 50), this, 1);
+//		new Wall(new Vec2f(-500, -500),  new Vec2f(500, worldBounds.y + 1000), this, 0);
+//		new Wall(new Vec2f(-500, -500),  new Vec2f(worldBounds.x + 1000, 500), this, 0);
+//		new Wall(new Vec2f(worldBounds.x, -500),  new Vec2f(500, worldBounds.y + 1000), this, 0);
+//		new Wall(new Vec2f(-500, worldBounds.y),  new Vec2f(worldBounds.x + 1000, 500), this, 0);
 	}
 	
 	@Override
@@ -141,26 +141,7 @@ public class GameWorld extends World {
 	
 	@Override
 	public void onMousePressed(MouseEvent e, Viewport gameView) {
-		if (playerUnit != null){
-			if (e.getButton() == MouseEvent.BUTTON1){
-				//System.out.println("not null");
-				Point point = Viewport.screenToView(gameView.viewSize,
-						gameView.amountToTranslate,
-						gameView.amountToZoom,
-						e.getPoint(),
-						gameView.topLeft);
-				Vec2f p = new Vec2f(point.x, point.y);
-				Vec2f dir = new Vec2f(1, 0);
-				ray = new Ray(playerUnit.position, dir.normalized(), 2, 2, playerUnit);
-				rays.add(ray);
-			} else if (e.getButton() == MouseEvent.BUTTON2) {
-				Vec2f dir = new Vec2f(-.2f, -.2f);
-				new Grenade(10, playerUnit.position, Color.BLACK, this, dir);
-			}else if (e.getButton() == MouseEvent.BUTTON3) {
-				Vec2f dir = new Vec2f(.2f, -.2f);
-				new Grenade(10, playerUnit.position, Color.BLACK, this, dir);
-			}
-		}
+		
 	}
 
 	@Override
@@ -189,26 +170,10 @@ public class GameWorld extends World {
 	
 	@Override
 	public <T extends PhysicsEntity> void onCollision(T s, T e) {
-		if (s instanceof Grenade) {
-			Grenade g = (Grenade) s;
-			g.explode();
-		} if (e instanceof Grenade){
-			Grenade g = (Grenade) e;
-			g.explode();
-		}
 	}
 
 	@Override
 	public <T extends PhysicsEntity> void onRayCollision(Ray r, T s, T e, Vec2f closestPoint) {
-		if (s instanceof Grenade) {
-			Grenade g = (Grenade) s;
-			if (r.position.dist(e.position) <= g.range){
-				e.applyImpulse(r.direction);
-			}
-			this.raysToRemove.add(r);
-			
-		} else {
-			e.applyImpulse(r.direction.smult(.11f));
-		}
+
 	}
 }

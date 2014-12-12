@@ -3,9 +3,12 @@ package parosenb.m.game;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import parosenb.engine.PhysicsEntity;
 import parosenb.engine.collision.Circle;
+import parosenb.engine.collision.Shape;
 import cs1971.Vec2f;
 import cs1971.Vec2i;
 
@@ -13,8 +16,11 @@ public class CircleChar extends GameEntity {
 	public Color color;
 	private GameWorld world;
 	
-	public CircleChar(float radius, Vec2f position, Color color, GameWorld world){
-		this.collisionShape = new Circle(new Vec2f(0, 0), radius, new Vec2f(position.x + radius, position.y + radius));
+	public CircleChar(String name, ArrayList<Shape> s, HashMap<String, String> properties){
+		super(name, s, properties);
+	
+	//(float radius, Vec2f position, Color color, GameWorld world){
+		//this.collisionShape = new Circle(new Vec2f(0, 0), radius, new Vec2f(position.x + radius, position.y + radius));
 		this.position = position;
 		this.color = color;
 		this.world = world;

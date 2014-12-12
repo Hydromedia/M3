@@ -53,16 +53,6 @@ public class MenuScreen extends Screen {
 	}
 	
 	public void drawButtons(Graphics2D g){
-		Font font = new Font("Copperplate", 1, screenVector.x/30);
-		g.setFont(font);
-		MenuButton button1 = new MenuButton(new Vec2f((screenVector.x/2) - ((screenVector.x/3)/2),
-												(screenVector.y/2) - (screenVector.y/5)), new Vec2f((screenVector.x/3),
-												(screenVector.y/5)), new Vec2f(20, 20), Color.LIGHT_GRAY, new Color(100, 100, 100, 200), false);
-		button1.draw(g);
-		g.setColor(Color.BLACK);
-		button1.drawText("Collision Testing", g);
-		buttons.add(button1);
-		
 		MenuButton button2 = new MenuButton(new Vec2f((screenVector.x/2) - ((screenVector.x/3)/2),
 				(screenVector.y/2) + (screenVector.y/5)), new Vec2f(((screenVector.x/3)),
 				(screenVector.y/5)), new Vec2f(20, 20), Color.LIGHT_GRAY, new Color(100, 100, 100, 200), true);
@@ -111,7 +101,7 @@ public class MenuScreen extends Screen {
 			if (buttons.get(i).drawRect.contains(e.getPoint())){
 				app.delScreen();
 				if (!buttons.get(i).isGame){
-					app.addScreen(new CollisionTestScreen(app, screenVector));
+					//app.addScreen(new CollisionTestScreen(app, screenVector));
 				} else {
 					app.addScreen(new GameScreen(app, screenVector));
 				}
