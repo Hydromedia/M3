@@ -7,10 +7,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import parosenb.engine.IO.Connection;
+import parosenb.engine.IO.Input;
+import parosenb.engine.IO.Output;
+import parosenb.engine.collision.AAB;
+import parosenb.engine.collision.Circle;
 import parosenb.engine.collision.Polygon;
 import parosenb.engine.collision.Ray;
 import parosenb.engine.collision.Shape;
@@ -34,8 +40,8 @@ public abstract class World {
 	public ArrayList<Ray> raysToRemove = new ArrayList<Ray>();
 	public ArrayList<Ray> rays = new ArrayList<Ray>();
 	protected Viewport viewport;
-	protected HashMap<String, Entity> entitiesInLevel = new HashMap<String, Entity>();
-	private HashMap<String, Class<?>> availableEntities;
+	protected HashMap<String, Entity> namesToEntities = new HashMap<String, Entity>();
+	protected HashMap<String, Class<?>> availableEntities = new HashMap<String, Class<?>>();
 	
 	
 	public ArrayList<PhysicsEntity> getPhysicsEntities() {
@@ -166,33 +172,95 @@ public abstract class World {
 		
 		//make Connections
 		for(ConnectionData d : leveld.getConnections()){
-			d.getSource();
+			Entity source = this.namesToEntities.get(d.getSource());
+			Output o = source.getOutput(d.getSourceOutput());
+			Entity target = this.namesToEntities.get(d.getTarget());
+			Input i = target.getInput(d.getTargetInput());
+			Connection c = new Connection(i);
+			o.connect(c);
 		}
 		
 		//make Entities
 		for(EntityData data : leveld.getEntities()) {
-			
 			//Set up shapes
 			ArrayList<Shape> shapes = new ArrayList<Shape>();
+			Vec2f position = null;
 			for (ShapeData s : data.getShapes()) {
 				if (s.getType() == ShapeData.Type.POLY){
 					java.util.List<Vec2f> list = s.getVerts();
-					for (Vec2f v : list){
-						
+					if (list.size() >= 1){
+						ArrayList<Vec2f> vertices = new ArrayList<Vec2f>();
+						Vec2f startPoint = list.get(0);
+						position = startPoint;
+						Vec2f oldVert = startPoint;
+						for (int i = 1; i < list.size(); i++) {
+							vertices.add(oldVert.minus(list.get(i)));
+							oldVert = list.get(i);
+						}
+						Polygon p = new Polygon(new Vec2f(0,0), startPoint, vertices);
+						shapes.add(p);
+					} else {
+						shapes.add(null);
 					}
-					Polygon p = new Polygon(new Vec2f(0,0), s.get, null);
-					shapes.add()
 				} else if (s.getType() == ShapeData.Type.CIRCLE) {
-					
+					Circle c = new Circle(new Vec2f(0,0), s.getRadius(), s.getCenter());
+					position = s.getMin();
+					shapes.add(c);
 				} else if (s.getType() == ShapeData.Type.BOX) {
-					
+					position = s.getMin();
+					AAB aab = new AAB(new Vec2f(0,0), s.getMin(), new Vec2f(s.getWidth(), s.getHeight()));
+					shapes.add(aab);
+				} else {
+					System.out.println("Shape not recognized.");
 				}
+			}
+			Map<String, String> properties = null;
+			ArrayList<Shape> sps = new ArrayList<Shape>();
+			Object test = null;
+			try{
+				System.out.println(data.getEntityClass());
+				System.out.println(shapes);
+				System.out.println(data.getProperties());
+				System.out.println(data.getName());
+				test = availableEntities.get(
+						data
+						.getEntityClass())
+						.getConstructor(
+							Vec2f.class,
+							World.class,
+							String.class,
+							sps.getClass(),
+							Map.class)
+					.newInstance(position, this, data.getName(), shapes, data.getProperties());
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (test instanceof Entity){
+				Entity e = (Entity) test;
+				entities.add(e);
+				this.namesToEntities.put(data.getName(), e);
 				
-				s.getType().getClass().getConstructor(parameterTypes).newInstance();
+			} else {
+				System.out.println("Attempted to add an unsupported entity.");
 			}
 			
 			
-			//availableEntities.get(d.getEntityClass()).getConstructor(String, Shape, HashMap<String, String>).newInstance(d.getName(), s, d.getProperties());
 		}
 		
 	}

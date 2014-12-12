@@ -2,15 +2,20 @@ package parosenb.engine;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import parosenb.engine.collision.Shape;
 import cs1971.Vec2f;
 
 
 public abstract class PhysicsEntity extends Entity {
-	public PhysicsEntity(String name, ArrayList<Shape> s,
-			HashMap<String, String> properties) {
-		super(name, s, properties);
+	public PhysicsEntity(Vec2f p, World w, String name, ArrayList<Shape> s,
+			Map<String, String> properties) {
+		super(p, w, name, s, properties);
+		w.addPhysicsEntity(this);
+//		this.restitution = Float.parseFloat(properties.get("restitution"));
+//		this.position = new Vec2f(Float.parseFloat(properties.get("xPos")),
+								 // Float.parseFloat(properties.get("yPos")));
 	}
 
 	public Vec2f velocity = new Vec2f(0, 0);

@@ -5,8 +5,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import parosenb.engine.PhysicsEntity;
+import parosenb.engine.World;
 import parosenb.engine.collision.Circle;
 import parosenb.engine.collision.Shape;
 import cs1971.Vec2f;
@@ -16,8 +18,8 @@ public class CircleChar extends GameEntity {
 	public Color color;
 	private GameWorld world;
 	
-	public CircleChar(String name, ArrayList<Shape> s, HashMap<String, String> properties){
-		super(name, s, properties);
+	public CircleChar(Vec2f position, World w, String name, ArrayList<Shape> s, Map<String, String> properties){
+		super(position, w, name, s, properties);
 	
 	//(float radius, Vec2f position, Color color, GameWorld world){
 		//this.collisionShape = new Circle(new Vec2f(0, 0), radius, new Vec2f(position.x + radius, position.y + radius));
@@ -26,7 +28,6 @@ public class CircleChar extends GameEntity {
 		this.world = world;
 		super.world = world;
 		world.addEntity(this);
-		world.gameEntities.add(this);
 		world.addPhysicsEntity(this);
 		this.restitution = .5f;
 	}

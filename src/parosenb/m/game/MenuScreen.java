@@ -18,15 +18,11 @@ import cs1971.Vec2i;
 public class MenuScreen extends Screen {
 	private Application app;
 	public ArrayList<MenuButton> buttons;
-	//GameWorld world;
 	int counter = 0;
-	//GameViewport view;
 	
 	public MenuScreen(Application app, Vec2i screenVector){
 		this.app = app;
 		this.screenVector = screenVector;
-		//world = new GameWorld(null, 100, 100, 100, app);
-		//view = new GameViewport(world);
 	}
 
 	@Override
@@ -74,7 +70,6 @@ public class MenuScreen extends Screen {
 		
 		g.setColor(Color.DARK_GRAY);
 		g.fillRect(0, 0, screenVector.x, screenVector.y);
-		//view.onDraw(g, new Vec2i(0, 0), screenVector, screenVector);
 		drawButtons(g);
 		drawTitle(g, "Welcome to Perry's M!");
 	}

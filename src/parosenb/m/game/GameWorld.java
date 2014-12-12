@@ -18,11 +18,9 @@ import parosenb.engine.collision.AAB;
 import parosenb.engine.collision.Polygon;
 import parosenb.engine.collision.Ray;
 import parosenb.m.game.WinScreen;
-import parosenb.m.game.CircleChar;
 
 public class GameWorld extends World {
 	public PlayerUnit playerUnit;
-	public ArrayList<GameEntity> gameEntities = new ArrayList<GameEntity>();
 	public ArrayList<GameEntity> gameToAdd = new ArrayList<GameEntity>();
 	public ArrayList<GameEntity> gameToRemove = new ArrayList<GameEntity>();
 	private GameScreen screen;
@@ -34,20 +32,20 @@ public class GameWorld extends World {
 		this.worldBounds = worldBounds;
 		this.entities = new ArrayList<Entity>();
 		this.physicsEntities = new ArrayList<PhysicsEntity>();
-//		this.playerUnit = new PlayerUnit(new Vec2f(worldBounds.x/2, worldBounds.y/3), worldBounds, this);
-//		CircleChar e1 = new CircleChar(30, new Vec2f(worldBounds.x/4, worldBounds.y/2), Color.BLACK, this);
-//		e1.setMass(4f);
-//		CircleChar e2 = new CircleChar(20, new Vec2f(3*worldBounds.x/4, worldBounds.y/2), Color.BLACK, this);
-//		e2.setMass(1f);
-//		
-//		AABChar e3 = new AABChar(new Vec2f(20, 40), new Vec2f(6*worldBounds.x/7, worldBounds.y/2), this);
-//		
-//		DiamondChar e4 = new DiamondChar(new Vec2f(1*worldBounds.x/7, worldBounds.y/2), 20, Color.orange, this);
-//		new Wall(new Vec2f(300, 300),  new Vec2f(100, 50), this, 1);
-//		new Wall(new Vec2f(-500, -500),  new Vec2f(500, worldBounds.y + 1000), this, 0);
-//		new Wall(new Vec2f(-500, -500),  new Vec2f(worldBounds.x + 1000, 500), this, 0);
-//		new Wall(new Vec2f(worldBounds.x, -500),  new Vec2f(500, worldBounds.y + 1000), this, 0);
-//		new Wall(new Vec2f(-500, worldBounds.y),  new Vec2f(worldBounds.x + 1000, 500), this, 0);
+		this.availableEntities.put("PlayerUnit", PlayerUnit.class);
+		this.availableEntities.put("AABChar", AABChar.class);
+		this.availableEntities.put("CircleChar", CircleChar.class);
+		this.availableEntities.put("PolygonChar", PolygonChar.class);
+		this.availableEntities.put("Wall", Wall.class);
+	}
+	
+	@Override
+	public void initializeWorld(String path){
+		super.initializeWorld(path);
+		if (this.namesToEntities.get("player") instanceof PlayerUnit) {
+			System.out.println("WHAT IS THIS");
+			this.playerUnit = (PlayerUnit) this.namesToEntities.get("player");
+		}
 	}
 	
 	@Override
@@ -78,19 +76,16 @@ public class GameWorld extends World {
 	@Override
 	public void onTick(long nanosSincePreviousTick) {
 		super.onTick(nanosSincePreviousTick);
-		Vec2f view = (new Vec2f(-this.playerUnit.position.x,  -this.playerUnit.position.y));
+		Vec2f view = (new Vec2f(
+				-this.playerUnit.position.x,
+				-this.playerUnit.position.y));
 		view = view.plus(new Vec2f(viewport.viewSize.x, viewport.viewSize.y).sdiv(2f));
 		viewport.amountToTranslate = new Vec2i((int)view.x, (int)view.y);
+		viewport.topLeft = new Vec2i ((int)view.sdiv(2).x,(int) view.sdiv(2).y);
 		//viewport.addTranslation(new Vec2i((int) this.playerUnit.position.x, (int)this.playerUnit.position.y));
 		for (PhysicsEntity e : physicsEntities){
 			Vec2f g = new Vec2f(0, .0098f);
 			e.applyForce(g.smult(e.getMass()));
-		}
-		for (GameEntity e: gameToAdd) {
-			gameEntities.add(e);
-		}
-		for (GameEntity e: gameToRemove) {
-			gameEntities.remove(e);
 		}
 		
 		if (playerUnit != null && goingRight) {
@@ -100,6 +95,8 @@ public class GameWorld extends World {
 		} else if (playerUnit != null) {
 			playerUnit.applyForce((((new Vec2f(0f, playerUnit.velocity.y)).minus(playerUnit.velocity)).smult(.1f)));
 		}
+		
+		
 	}
 	
 	@Override
@@ -107,6 +104,7 @@ public class GameWorld extends World {
 		if (playerUnit != null) {
 			if (e.getKeyChar() == 'w') {
 				if(playerUnit.getLastMTV() != null && playerUnit.getLastMTV().y <= 0){
+					System.out.println("test");
 					playerUnit.applyImpulse(new Vec2f(0, -1.4f));
 				}
 			} else if (e.getKeyChar() == 'a'){

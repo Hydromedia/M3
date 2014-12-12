@@ -6,10 +6,12 @@ import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import cs1971.Vec2f;
 import cs1971.Vec2i;
 import parosenb.engine.PhysicsEntity;
+import parosenb.engine.World;
 import parosenb.engine.collision.AAB;
 import parosenb.engine.collision.Circle;
 import parosenb.engine.collision.Shape;
@@ -18,14 +20,12 @@ public class AABChar extends GameEntity {
 	public Color color;
 	
 	//Vec2f size, Vec2f position, GameWorld world
-	public AABChar(String name, ArrayList<Shape> s, HashMap<String, String> properties){
-		super(name, s, properties);
-		//this.collisionShape = new AAB(new Vec2f(0, 0), position, size);
-		this.position = position;
+	public AABChar(Vec2f position, World w, String name, ArrayList<Shape> s, Map<String, String> properties){
+		super(position, w, name, s, properties);
+		//this.restitution = Float.parseFloat(properties.get("restitution"));
+		this.collisionShape = s.get(0);
 		this.color = Color.PINK;
 		super.world = world;
-		world.addEntity(this);
-		//world.gameEntities.add(this);
 		world.addPhysicsEntity(this);
 		this.restitution = .5f;
 	}

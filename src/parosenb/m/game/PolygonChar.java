@@ -6,33 +6,27 @@ import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import cs1971.Vec2f;
 import cs1971.Vec2i;
 import parosenb.engine.PhysicsEntity;
+import parosenb.engine.World;
 import parosenb.engine.collision.AAB;
 import parosenb.engine.collision.Circle;
 import parosenb.engine.collision.Polygon;
 import parosenb.engine.collision.Shape;
 
-public class DiamondChar extends GameEntity {
+public class PolygonChar extends GameEntity {
 	public Color color;
 	
-	public DiamondChar(String name, ArrayList<Shape> s, HashMap<String, String> properties){
-		super(name, s, properties);
-		//(Vec2f position, float size, Color color, GameWorld world){
+	public PolygonChar(Vec2f position, World w, String name, ArrayList<Shape> s, Map<String, String> properties){
+		super(position, w, name, s, properties);
 		
 		ArrayList<Vec2f> vectors = new ArrayList<Vec2f>();
-//		vectors.add(new Vec2f(size, -size));
-//		vectors.add(new Vec2f(-size, -size));
-//		vectors.add(new Vec2f(-size, size));
-//		vectors.add(new Vec2f(size, size));
 		this.collisionShape = new Polygon(new Vec2f(0, 0), position, vectors);
-		this.position = position;
-		this.color = color;
 		super.world = world;
 		world.addEntity(this);
-		//world.gameEntities.add(this);
 		world.addPhysicsEntity(this);
 		this.restitution = .5f;
 	}
