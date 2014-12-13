@@ -17,14 +17,12 @@ import parosenb.engine.collision.Circle;
 import parosenb.engine.collision.Shape;
 
 public class AABChar extends GameEntity {
-	public Color color;
 	
 	//Vec2f size, Vec2f position, GameWorld world
 	public AABChar(Vec2f position, World w, String name, ArrayList<Shape> s, Map<String, String> properties){
 		super(position, w, name, s, properties);
 		//this.restitution = Float.parseFloat(properties.get("restitution"));
 		this.collisionShape = s.get(0);
-		this.color = Color.PINK;
 		super.world = world;
 		world.addPhysicsEntity(this);
 		this.restitution = .5f;

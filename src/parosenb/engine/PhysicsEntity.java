@@ -24,6 +24,8 @@ public abstract class PhysicsEntity extends Entity {
 	protected Vec2f impulse = new Vec2f(0, 0);
 	protected Vec2f force = new Vec2f(0, 0);
 	protected float restitution = .5f;
+	protected boolean doesCollisions = true;
+
 	private Vec2f lastMTV = new Vec2f(0,0);
 	
 	public void setLastMTV(Vec2f lastMTV){
@@ -69,4 +71,23 @@ public abstract class PhysicsEntity extends Entity {
 
 	}
 
+	public void onCollide(PhysicsEntity e) {
+		//do nothing
+	}
+	
+	public boolean isMoveable() {
+		return isMoveable;
+	}
+
+	public void setMoveable(boolean isMoveable) {
+		this.isMoveable = isMoveable;
+	}
+	
+	public boolean doesCollisions() {
+		return doesCollisions;
+	}
+
+	public void setDoesCollisions(boolean doesCollisions) {
+		this.doesCollisions = doesCollisions;
+	}
 }

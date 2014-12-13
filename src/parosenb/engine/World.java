@@ -78,69 +78,58 @@ public abstract class World {
 				shape:
 				if (s != e && s.collisionShape != null && e.collisionShape != null &&
 						(s.collisionShape.collisionGroupMask & e.collisionShape.collisionGroupMask) == 0) {
-					Vec2f mtv = s.collisionShape.collides(e.collisionShape);
-					Vec2f mtv2 = e.collisionShape.collides(s.collisionShape);
-//					if (mtv2 == null) {
-//						System.out.println("2null");
-//					} if (mtv == null) {
-//						System.out.println("1null");
-//					}
-					
-					if (s.getLastMTV() == null){
-						s.setLastMTV((mtv2));
-					} else if (mtv2 != null) {
-						s.setLastMTV(s.getLastMTV().plus(mtv2));
-					} if (e.getLastMTV() == null){
-						e.setLastMTV((mtv));
-					} else if (mtv != null){
-						e.setLastMTV(e.getLastMTV().plus(mtv));
+					if (s.doesCollisions && e.doesCollisions) {
+						Vec2f mtv = s.collisionShape.collides(e.collisionShape);
+						Vec2f mtv2 = e.collisionShape.collides(s.collisionShape);
+						
+						if (s.getLastMTV() == null){
+							s.setLastMTV((mtv2));
+						} else if (mtv2 != null) {
+							s.setLastMTV(s.getLastMTV().plus(mtv2));
+						} if (e.getLastMTV() == null){
+							e.setLastMTV((mtv));
+						} else if (mtv != null){
+							e.setLastMTV(e.getLastMTV().plus(mtv));
+						}
+						
+						
+						
+						if (mtv != null) {
+							if (s.isMoveable && e.isMoveable) {
+								s.position = s.position.plus(mtv2.sdiv(2));
+								s.collisionShape.updatePosition(s.position);
+								e.position = e.position.plus(mtv.sdiv(2));
+								e.collisionShape.updatePosition(e.position);
+							} else if (s.isMoveable && !e.isMoveable) {
+								s.position = s.position.plus(mtv2);
+								s.collisionShape.updatePosition(s.position);
+							} else if (e.isMoveable && !s.isMoveable) {
+								e.position = e.position.plus(mtv);
+								e.collisionShape.updatePosition(e.position);
+							}
+							float COR = (float) Math.sqrt(s.restitution*e.restitution);
+							if (mtv2.mag() == 0 || mtv.mag() == 0){
+								break shape;
+							}
+							Vec2f Us = mtv2.normalized().smult(s.velocity.dot(mtv2.normalized()));
+							Vec2f Ue = mtv.normalized().smult(e.velocity.dot(mtv.normalized()));
+							Vec2f Is = new Vec2f(0,0), Ie = new Vec2f(0,0);
+							if (s.isMoveable && e.isMoveable){
+								Is = (Ue.minus(Us)).smult((s.mass*e.mass*(1+COR))/(s.mass+e.mass));
+								Ie = (Us.minus(Ue)).smult((e.mass*s.mass*(1+COR))/(e.mass+s.mass));
+							} else if (!s.isMoveable && e.isMoveable) {
+								Ie = (Us.minus(Ue)).smult(e.mass*(1+COR));
+							} else if (s.isMoveable && !e.isMoveable){
+								Is = (Ue.minus(Us)).smult(s.mass*(1+COR));
+							} else {
+								//System.out.println("Should never happen, immovable object collision");
+							}
+							s.applyImpulse(Is);
+							e.applyImpulse(Ie);
+						}
 					}
-					
-					
-					
-					if (mtv != null) {
-						if (s.isMoveable && e.isMoveable) {
-							s.position = s.position.plus(mtv2.sdiv(2));
-							s.collisionShape.updatePosition(s.position);
-							e.position = e.position.plus(mtv.sdiv(2));
-							e.collisionShape.updatePosition(e.position);
-						} else if (s.isMoveable && !e.isMoveable) {
-							s.position = s.position.plus(mtv2);
-							s.collisionShape.updatePosition(s.position);
-						} else if (e.isMoveable && !s.isMoveable) {
-							e.position = e.position.plus(mtv);
-							e.collisionShape.updatePosition(e.position);
-						}
-						float COR = (float) Math.sqrt(s.restitution*e.restitution);
-						if (mtv2.mag() == 0 || mtv.mag() == 0){
-							break shape;
-						}
-						Vec2f Us = mtv2.normalized().smult(s.velocity.dot(mtv2.normalized()));
-						Vec2f Ue = mtv.normalized().smult(e.velocity.dot(mtv.normalized()));
-						//Vec2f Vs = (Ue.minus(Us)).smult((e.mass*(1+COR))/s.mass+e.mass).plus(Us);
-						//Vec2f Ve = (Ue.minus(Us)).smult((s.mass*(1+COR))/e.mass+s.mass).plus(Ue);
-//						Vec2f Vs = (Us.smult(s.mass).plus(Ue.smult(e.mass)).plus(Ue.minus(Us).smult(e.mass*COR))).sdiv(s.mass+e.mass);
-//						Vec2f Ve = (Ue.smult(e.mass).plus(Us.smult(s.mass)).plus(Us.minus(Ue).smult(s.mass*COR))).sdiv(e.mass+s.mass);
-						Vec2f Is = new Vec2f(0,0), Ie = new Vec2f(0,0);
-						if (s.isMoveable && e.isMoveable){
-							Is = (Ue.minus(Us)).smult((s.mass*e.mass*(1+COR))/(s.mass+e.mass));
-							Ie = (Us.minus(Ue)).smult((e.mass*s.mass*(1+COR))/(e.mass+s.mass));
-						} else if (!s.isMoveable && e.isMoveable) {
-//							Is = (Ue.minus(Us)).smult(e.mass*(1+COR));
-							Ie = (Us.minus(Ue)).smult(e.mass*(1+COR));
-						} else if (s.isMoveable && !e.isMoveable){
-							Is = (Ue.minus(Us)).smult(s.mass*(1+COR));
-//							Ie = (Us.minus(Ue)).smult(s.mass*(1+COR));
-						} else {
-							//do nothing
-							//System.out.println("Should never happen, immovable object collision");
-						}
-						s.applyImpulse(Is);
-						e.applyImpulse(Ie);
-						//s.applyImpulse(mtv2.smult(Math.min((Math.abs(s.velocity.x) + (Math.abs(s.velocity.y))), .2f)));
-						//e.applyImpulse(mtv.smult(Math.min((Math.abs(s.velocity.x) + (Math.abs(s.velocity.y))), .2f)));
-						onCollision(s, e);
-					} 
+					e.onCollide(s);
+					s.onCollide(e);
 				}
 			}
 		}
@@ -315,7 +304,9 @@ public abstract class World {
 	
 	public void onDraw(Graphics2D g){
 		for(Entity e: entities){
-			e.onDraw(g);
+			if (e.isVisible()){
+				e.onDraw(g);
+			}
 		}
 	};
 	

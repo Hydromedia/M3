@@ -1,5 +1,6 @@
 package parosenb.engine;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +17,11 @@ public abstract class Entity {
 	public Shape collisionShape;
 	public World world;
 	public final String name;
+	protected final Color color;
 	protected HashMap<String, Output> namesToOutputs;
 	protected HashMap<String, Input> namesToInputs;
+	protected boolean visible = true;
+	
 	
 	public Entity(Vec2f position, World w, String name, ArrayList<Shape> s, Map<String, String> properties) {
 		collisionShape = s.get(0);
@@ -25,6 +29,15 @@ public abstract class Entity {
 		w.addEntity(this);
 		this.name = name;
 		this.position = position;
+		
+		if (properties.get("hasColor")!=null){
+			int red = Integer.parseInt(properties.get("red"));
+			int blue = Integer.parseInt(properties.get("green"));
+			int green = Integer.parseInt(properties.get("blue"));
+			this.color = new Color(red, green, blue);
+		} else {
+			this.color = Color.black;
+		}
 	}
 	public abstract void onTick(long nanosSincePreviousTick);
 	
@@ -38,5 +51,11 @@ public abstract class Entity {
 	}
 	public Input getInput(String targetInput) {
 		return namesToInputs.get(targetInput);
+	}
+	public boolean isVisible() {
+		return visible;
+	}
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 }

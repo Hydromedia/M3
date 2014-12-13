@@ -15,7 +15,6 @@ import cs1971.Vec2f;
 import cs1971.Vec2i;
 
 public class CircleChar extends GameEntity {
-	public Color color;
 	private GameWorld world;
 	
 	public CircleChar(Vec2f position, World w, String name, ArrayList<Shape> s, Map<String, String> properties){
@@ -24,8 +23,6 @@ public class CircleChar extends GameEntity {
 	//(float radius, Vec2f position, Color color, GameWorld world){
 		//this.collisionShape = new Circle(new Vec2f(0, 0), radius, new Vec2f(position.x + radius, position.y + radius));
 		this.position = position;
-		this.color = color;
-		this.world = world;
 		super.world = world;
 		world.addEntity(this);
 		world.addPhysicsEntity(this);

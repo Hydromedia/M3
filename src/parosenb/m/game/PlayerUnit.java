@@ -16,13 +16,12 @@ import parosenb.engine.collision.Polygon;
 import parosenb.engine.collision.Shape;
 
 public class PlayerUnit extends GameEntity {
-	private Color color;
 	private GameWorld world;
 	
 	public PlayerUnit(Vec2f position, World w, String name, ArrayList<Shape> s, Map<String, String> properties){
 		super(position, w, name, s, properties);
 		super.world = world;
-		this.color = Color.green;
+		
 		this.collisionShape = s.get(0);
 		this.setMass(2f);
 		this.collisionShape.collisionGroupMask = 2;

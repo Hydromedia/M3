@@ -18,16 +18,10 @@ import parosenb.engine.collision.Polygon;
 import parosenb.engine.collision.Shape;
 
 public class PolygonChar extends GameEntity {
-	public Color color;
 	
 	public PolygonChar(Vec2f position, World w, String name, ArrayList<Shape> s, Map<String, String> properties){
 		super(position, w, name, s, properties);
-		
-		ArrayList<Vec2f> vectors = new ArrayList<Vec2f>();
-		this.collisionShape = new Polygon(new Vec2f(0, 0), position, vectors);
-		super.world = world;
-		world.addEntity(this);
-		world.addPhysicsEntity(this);
+		this.collisionShape = s.get(0);
 		this.restitution = .5f;
 	}
 

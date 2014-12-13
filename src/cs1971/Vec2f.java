@@ -123,7 +123,7 @@ public final class Vec2f implements Serializable {
 	 *               component in {@code v}
 	 */
 	public final Vec2f plus(Vec2f v) {
-		return new Vec2f(x + v.x, y + v.y);
+			return new Vec2f(x + v.x, y + v.y);
 	}
 	
 	/**
