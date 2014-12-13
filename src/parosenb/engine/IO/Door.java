@@ -11,15 +11,18 @@ import cs1971.Vec2f;
 
 public class Door extends PhysicsEntity {
 	
-	private Output onDoorOpen;
-	private Output onDoorClosed;
-	private DoorToggleInput doDoorToggle;
+	private Output onDoorOpen = new Output();
+	private Output onDoorClosed = new Output();
+	private DoorToggleInput doDoorToggle = new DoorToggleInput();
 	public Door(Vec2f position, World w, String name, ArrayList<Shape> s,
 			Map<String, String> properties) {
 		super(position, w, name, s, properties);
 		this.visible = true;
 		this.doesCollisions = true;
 		this.isMoveable = false;
+		namesToInputs.put("doDoorToggle", doDoorToggle);
+		namesToOutputs.put("onDoorOpen", onDoorOpen);
+		namesToOutputs.put("onDoorClosed", onDoorClosed);
 	}
 	
 	@Override

@@ -27,16 +27,19 @@ public class GameWorld extends World {
 	private boolean goingLeft = false;
 	private boolean goingRight = false;
 	private Ray ray = null;
-	public GameWorld(Vec2f worldBounds, GameScreen screen) {
+	private String level;
+	public GameWorld(Vec2f worldBounds, GameScreen screen, String level) {
 		this.screen = screen;
 		this.worldBounds = worldBounds;
 		this.entities = new ArrayList<Entity>();
+		this.level = level;
 		this.physicsEntities = new ArrayList<PhysicsEntity>();
 		this.availableEntities.put("PlayerUnit", PlayerUnit.class);
 		this.availableEntities.put("AABChar", AABChar.class);
 		this.availableEntities.put("CircleChar", CircleChar.class);
 		this.availableEntities.put("PolygonChar", PolygonChar.class);
 		this.availableEntities.put("Wall", Wall.class);
+		this.availableEntities.put("FallTrap", FallTrap.class);
 	}
 	
 	@Override
@@ -187,5 +190,10 @@ public class GameWorld extends World {
 	@Override
 	public <T extends PhysicsEntity> void onRayCollision(Ray r, T s, T e, Vec2f closestPoint) {
 
+	}
+	
+	public void lose() {
+		screen.getApp().delScreen();
+		screen.getApp().addScreen(new MenuScreen(screen.getApp(), screen.screenVector));
 	}
 }

@@ -18,13 +18,15 @@ public abstract class Entity {
 	public World world;
 	public final String name;
 	protected final Color color;
-	protected HashMap<String, Output> namesToOutputs;
-	protected HashMap<String, Input> namesToInputs;
+	protected HashMap<String, Output> namesToOutputs = new HashMap<String, Output>();
+	protected HashMap<String, Input> namesToInputs = new HashMap<String, Input>();
 	protected boolean visible = true;
 	
 	
 	public Entity(Vec2f position, World w, String name, ArrayList<Shape> s, Map<String, String> properties) {
-		collisionShape = s.get(0);
+		if (s.size() >=1){
+			collisionShape = s.get(0);
+		}
 		this.world = w;
 		w.addEntity(this);
 		this.name = name;

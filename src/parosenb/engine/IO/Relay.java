@@ -12,14 +12,18 @@ import parosenb.engine.collision.Shape;
 
 public class Relay extends Entity {
 	
-	private Output onSignalRecieved;
-	private RelayOpenInput doRelayOpenInput;
-	private RelayCloseInput doRelayCloseInput;
-	private RelaySendInput doRelaySendInput;
+	private Output onSignalRecieved = new Output();
+	private RelayOpenInput doRelayOpen = new RelayOpenInput();
+	private RelayCloseInput doRelayClose = new RelayCloseInput();
+	private RelaySendInput doRelaySend = new RelaySendInput();
 	private boolean isOpen = false;
 	public Relay(Vec2f position, World w, String name, ArrayList<Shape> s,
 			Map<String, String> properties) {
 		super(position, w, name, s, properties);
+		namesToInputs.put("doRelayOpen", doRelayOpen);
+		namesToInputs.put("doRelayClose", doRelayClose);
+		namesToInputs.put("doRelaySend", doRelaySend);
+		namesToOutputs.put("onSignalRecieved", onSignalRecieved);
 	}
 	
 	class RelayOpenInput extends Input {
@@ -39,8 +43,10 @@ public class Relay extends Entity {
 	class RelaySendInput extends Input {
 		@Override
 		public void run(HashMap<String, String> args) {
-			System.out.println("Sending");
-			onSignalRecieved.run();
+			if(isOpen){
+				System.out.println("Sending");
+				onSignalRecieved.run();
+			}
 		}
 	 }
 

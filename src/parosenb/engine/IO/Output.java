@@ -3,7 +3,7 @@ package parosenb.engine.IO;
 import java.util.ArrayList;
 
 public class Output {
-	 private ArrayList<Connection> connections;
+	 private ArrayList<Connection> connections = new ArrayList<Connection>();
 	 
 	 public void connect(Connection c) { 
 		 connections.add(c); 

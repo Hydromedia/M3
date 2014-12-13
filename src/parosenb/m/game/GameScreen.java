@@ -21,11 +21,12 @@ public class GameScreen extends Screen {
 	private int HEIGHT = 500;
 	private final float myScale = .5f;
 	private Vec2f gameViewSize;
+	private final String LEVEL_PATH = "levels/level1.nlf";
 	public GameScreen(Application app, Vec2i screenVector){
 		this.app = app;
 		this.screenVector = screenVector;
-		this.gameWorld = new GameWorld(new Vec2f(WIDTH, HEIGHT), this);
-		gameWorld.initializeWorld("levels/level1.nlf");
+		this.gameWorld = new GameWorld(new Vec2f(WIDTH, HEIGHT), this, LEVEL_PATH);
+		gameWorld.initializeWorld(LEVEL_PATH);
 		//int size = Math.min(screenVector.x, screenVector.y);
 		this.gameView = new GameViewport(new Vec2i(0,0), new Vec2f(0,0), screenVector, new Vec2f(WIDTH, HEIGHT), 1, gameWorld);
 		gameWorld.setView(gameView);

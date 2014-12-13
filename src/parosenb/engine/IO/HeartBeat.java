@@ -10,12 +10,13 @@ import parosenb.engine.Entity;
 import parosenb.engine.World;
 import parosenb.engine.collision.Shape;
 
-public class Heartbeat extends Entity {
+public class HeartBeat extends Entity {
 	
-	private HeartBeatInput doHeartBeat;
-	public Heartbeat(Vec2f position, World w, String name, ArrayList<Shape> s,
+	private HeartBeatInput doHeartBeat = new HeartBeatInput();
+	public HeartBeat(Vec2f position, World w, String name, ArrayList<Shape> s,
 			Map<String, String> properties) {
 		super(position, w, name, s, properties);
+		namesToInputs.put("doHeartBeat", doHeartBeat);
 	}
 	
 	class HeartBeatInput extends Input {

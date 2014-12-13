@@ -13,14 +13,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 import parosenb.engine.IO.Connection;
+import parosenb.engine.IO.Door;
+import parosenb.engine.IO.HeartBeat;
 import parosenb.engine.IO.Input;
 import parosenb.engine.IO.Output;
+import parosenb.engine.IO.Relay;
+import parosenb.engine.IO.Sensor;
+import parosenb.engine.IO.Trap;
 import parosenb.engine.collision.AAB;
 import parosenb.engine.collision.Circle;
 import parosenb.engine.collision.Polygon;
 import parosenb.engine.collision.Ray;
 import parosenb.engine.collision.Shape;
+import parosenb.m.game.AABChar;
+import parosenb.m.game.CircleChar;
 import parosenb.m.game.GameViewport;
+import parosenb.m.game.PlayerUnit;
+import parosenb.m.game.PolygonChar;
+import parosenb.m.game.Wall;
 import cs1971.CS1971LevelReader;
 import cs1971.CS1971LevelReader.InvalidLevelException;
 import cs1971.LevelData;
@@ -77,63 +87,63 @@ public abstract class World {
 				PhysicsEntity e = physicsEntities.get(j);
 				shape:
 				if (s != e && s.collisionShape != null && e.collisionShape != null &&
-						(s.collisionShape.collisionGroupMask & e.collisionShape.collisionGroupMask) == 0) {
-					if (s.doesCollisions && e.doesCollisions) {
-						Vec2f mtv = s.collisionShape.collides(e.collisionShape);
-						Vec2f mtv2 = e.collisionShape.collides(s.collisionShape);
-						
-						if (s.getLastMTV() == null){
-							s.setLastMTV((mtv2));
-						} else if (mtv2 != null) {
-							s.setLastMTV(s.getLastMTV().plus(mtv2));
-						} if (e.getLastMTV() == null){
-							e.setLastMTV((mtv));
-						} else if (mtv != null){
-							e.setLastMTV(e.getLastMTV().plus(mtv));
-						}
-						
-						
-						
-						if (mtv != null) {
-							if (s.isMoveable && e.isMoveable) {
-								s.position = s.position.plus(mtv2.sdiv(2));
-								s.collisionShape.updatePosition(s.position);
-								e.position = e.position.plus(mtv.sdiv(2));
-								e.collisionShape.updatePosition(e.position);
-							} else if (s.isMoveable && !e.isMoveable) {
-								s.position = s.position.plus(mtv2);
-								s.collisionShape.updatePosition(s.position);
-							} else if (e.isMoveable && !s.isMoveable) {
-								e.position = e.position.plus(mtv);
-								e.collisionShape.updatePosition(e.position);
-							}
-							float COR = (float) Math.sqrt(s.restitution*e.restitution);
-							if (mtv2.mag() == 0 || mtv.mag() == 0){
-								break shape;
-							}
-							Vec2f Us = mtv2.normalized().smult(s.velocity.dot(mtv2.normalized()));
-							Vec2f Ue = mtv.normalized().smult(e.velocity.dot(mtv.normalized()));
-							Vec2f Is = new Vec2f(0,0), Ie = new Vec2f(0,0);
-							if (s.isMoveable && e.isMoveable){
-								Is = (Ue.minus(Us)).smult((s.mass*e.mass*(1+COR))/(s.mass+e.mass));
-								Ie = (Us.minus(Ue)).smult((e.mass*s.mass*(1+COR))/(e.mass+s.mass));
-							} else if (!s.isMoveable && e.isMoveable) {
-								Ie = (Us.minus(Ue)).smult(e.mass*(1+COR));
-							} else if (s.isMoveable && !e.isMoveable){
-								Is = (Ue.minus(Us)).smult(s.mass*(1+COR));
-							} else {
-								//System.out.println("Should never happen, immovable object collision");
-							}
-							s.applyImpulse(Is);
-							e.applyImpulse(Ie);
-						}
+					(s.collisionShape.collisionGroupMask & e.collisionShape.collisionGroupMask) == 0) {
+					Vec2f mtv = s.collisionShape.collides(e.collisionShape);
+					Vec2f mtv2 = e.collisionShape.collides(s.collisionShape);
+					
+					if (s.getLastMTV() == null){
+						s.setLastMTV((mtv2));
+					} else if (mtv2 != null) {
+						s.setLastMTV(s.getLastMTV().plus(mtv2));
+					} if (e.getLastMTV() == null){
+						e.setLastMTV((mtv));
+					} else if (mtv != null){
+						e.setLastMTV(e.getLastMTV().plus(mtv));
 					}
-					e.onCollide(s);
-					s.onCollide(e);
+					
+					
+					
+					if (mtv != null && s.doesCollisions && e.doesCollisions) {
+						if (s.isMoveable && e.isMoveable) {
+							s.position = s.position.plus(mtv2.sdiv(2));
+							s.collisionShape.updatePosition(s.position);
+							e.position = e.position.plus(mtv.sdiv(2));
+							e.collisionShape.updatePosition(e.position);
+						} else if (s.isMoveable && !e.isMoveable) {
+							s.position = s.position.plus(mtv2);
+							s.collisionShape.updatePosition(s.position);
+						} else if (e.isMoveable && !s.isMoveable) {
+							e.position = e.position.plus(mtv);
+							e.collisionShape.updatePosition(e.position);
+						}
+						float COR = (float) Math.sqrt(s.restitution*e.restitution);
+						if (mtv2.mag() == 0 || mtv.mag() == 0){
+							break shape;
+						}
+						Vec2f Us = mtv2.normalized().smult(s.velocity.dot(mtv2.normalized()));
+						Vec2f Ue = mtv.normalized().smult(e.velocity.dot(mtv.normalized()));
+						Vec2f Is = new Vec2f(0,0), Ie = new Vec2f(0,0);
+						if (s.isMoveable && e.isMoveable){
+							Is = (Ue.minus(Us)).smult((s.mass*e.mass*(1+COR))/(s.mass+e.mass));
+							Ie = (Us.minus(Ue)).smult((e.mass*s.mass*(1+COR))/(e.mass+s.mass));
+						} else if (!s.isMoveable && e.isMoveable) {
+							Ie = (Us.minus(Ue)).smult(e.mass*(1+COR));
+						} else if (s.isMoveable && !e.isMoveable){
+							Is = (Ue.minus(Us)).smult(s.mass*(1+COR));
+						} else {
+							//System.out.println("Should never happen, immovable object collision");
+						}
+						s.applyImpulse(Is);
+						e.applyImpulse(Ie);
+					} else if (mtv != null) {
+						e.onCollide(s);
+						s.onCollide(e);
+					}
 				}
 			}
 		}
 	}
+	
 	
 	public abstract <T extends PhysicsEntity> void onRayCollision(Ray r, T s, T e, Vec2f closestPoint);
 	
@@ -163,8 +173,8 @@ public abstract class World {
 		}
 	}
 	
-	public void initializeWorld(String path){
-		//"levels/level1.nlf"
+	public void initializeWorld(String path) {
+		addAvailableEngineEntities();
 		File file = new File(path);
 		LevelData leveld = null;
 		try {
@@ -173,16 +183,6 @@ public abstract class World {
 			System.out.println("File not found.");
 		} catch (InvalidLevelException e) {
 			System.out.println("Invalid level.");
-		}
-		
-		//make Connections
-		for(ConnectionData d : leveld.getConnections()){
-			Entity source = this.namesToEntities.get(d.getSource());
-			Output o = source.getOutput(d.getSourceOutput());
-			Entity target = this.namesToEntities.get(d.getTarget());
-			Input i = target.getInput(d.getTargetInput());
-			Connection c = new Connection(i);
-			o.connect(c);
 		}
 		
 		//make Entities
@@ -223,10 +223,6 @@ public abstract class World {
 			ArrayList<Shape> sps = new ArrayList<Shape>();
 			Object test = null;
 			try{
-				System.out.println(data.getEntityClass());
-				System.out.println(shapes);
-				System.out.println(data.getProperties());
-				System.out.println(data.getName());
 				test = availableEntities.get(
 						data
 						.getEntityClass())
@@ -262,14 +258,35 @@ public abstract class World {
 				this.namesToEntities.put(data.getName(), e);
 				
 			} else {
-				System.out.println("Attempted to add an unsupported entity.");
+				System.out.println("Attempted to add an unsupported entity: " + data.getEntityClass());
 			}
-			
-			
 		}
 		
+		//make Connections
+		for(ConnectionData d : leveld.getConnections()){
+			Entity source = this.namesToEntities.get(d.getSource());
+			System.out.println(source);
+			System.out.println(d.getSourceOutput());
+			System.out.println(source.getOutput(d.getSourceOutput()));
+			Output o = source.getOutput(d.getSourceOutput());
+			Entity target = this.namesToEntities.get(d.getTarget());
+			Input i = target.getInput(d.getTargetInput());
+			Connection c = new Connection(i);
+			System.out.println(source);
+			System.out.println(c);
+			System.out.println(o);
+			o.connect(c);
+		}
 	}
 	
+	private void addAvailableEngineEntities() {
+		this.availableEntities.put("Door", Door.class);
+		this.availableEntities.put("HeartBeat", HeartBeat.class);
+		this.availableEntities.put("Relay", Relay.class);
+		this.availableEntities.put("Sensor", Sensor.class);
+		this.availableEntities.put("Trap", Trap.class);
+	}
+
 	public void setView(Viewport view){
 		this.viewport = view;
 	}

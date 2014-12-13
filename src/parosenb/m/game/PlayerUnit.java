@@ -17,6 +17,7 @@ import parosenb.engine.collision.Shape;
 
 public class PlayerUnit extends GameEntity {
 	private GameWorld world;
+	private int health = 100;
 	
 	public PlayerUnit(Vec2f position, World w, String name, ArrayList<Shape> s, Map<String, String> properties){
 		super(position, w, name, s, properties);
@@ -41,7 +42,14 @@ public class PlayerUnit extends GameEntity {
 	public void onTick(long nanosSincePreviousTick) {
 		super.onTick(nanosSincePreviousTick);
 		float millisecondsSincePreviousTick = nanosSincePreviousTick / 1000000;
+		if (health <= 0){
+			world.lose();
+		}
 		//this.setLastMTV(lastMTV);
 		//System.out.println("PlayerUnit vel: " + this.velocity + " pos: " + this.position);
+	}
+
+	public void damage(int i) {
+		this.health = this.health - i;
 	}
 }
